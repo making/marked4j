@@ -1,0 +1,7 @@
+{
+  "name": "marked4j",
+  "version": "0.9.0",
+  "dependencies": {
+    "marked": "0.2.10"
+  }
+}
