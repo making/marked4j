@@ -32,6 +32,32 @@ public class MarkedTest {
     }
 
     @Test
+    public void testHighlight() {
+        String md = " ```javascript\n" +
+                " var s = \"JavaScript syntax highlighting\";\n" +
+                " alert(s);\n" +
+                " ```\n" +
+                " \n" +
+                " ```python\n" +
+                " s = \"Python syntax highlighting\"\n" +
+                " print s\n" +
+                " ```\n" +
+                " \n" +
+                " ```\n" +
+                " No language indicated, so no syntax highlighting. \n" +
+                " But let's throw in a <b>tag</b>.\n" +
+                " ```";
+        String expected = "<pre><code class=\"lang-javascript\"> var s = &quot;JavaScript syntax highlighting&quot;;\n" +
+                " alert(s);</code></pre>\n" +
+                "<pre><code class=\"lang-python\"> s = &quot;Python syntax highlighting&quot;\n" +
+                " print s</code></pre>\n" +
+                "<pre><code> No language indicated, so no syntax highlighting. \n" +
+                " But let&#39;s throw in a &lt;b&gt;tag&lt;/b&gt;.</code></pre>\n";
+        Marked marked = new MarkedBuilder().gfm(true).build();
+        assertThat(marked.marked(md), is(expected));
+    }
+
+    @Test
     public void testTable() {
         String md = "Colons can be used to align columns.\n" +
                 "\n" +
