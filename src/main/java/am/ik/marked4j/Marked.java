@@ -21,6 +21,23 @@ public class Marked {
                   boolean pedantic, boolean sanitize, boolean smartLists,
                   boolean smartypants) {
         this();
+        ScriptEngine engine = (ScriptEngine) invocableEngine;
+        try {
+            Object options = engine.eval(String.format("(function(){" +
+                    "return {\n" +
+                    "  gfm: %s,\n" +
+                    "  tables: %s,\n" +
+                    "  breaks: %s,\n" +
+                    "  pedantic: %s,\n" +
+                    "  sanitize: %s,\n" +
+                    "  smartLists: %s,\n" +
+                    "  smartypants: %s\n" +
+                    "}})();",
+                    gfm, tables, breaks, pedantic, sanitize, smartLists, smartypants));
+            invocableEngine.invokeMethod(marked4j, "setOptions", options);
+        } catch (ScriptException | NoSuchMethodException e) {
+            throw new IllegalStateException("invalid script!", e);
+        }
     }
 
     public Marked() {
@@ -33,8 +50,12 @@ public class Marked {
             String js = copyToString(strm, StandardCharsets.UTF_8);
             Bindings bindings = new SimpleBindings(); // todo
             this.marked4j = engine
-                    .eval(js
-                            + ";Marked4J = function(marked){this.marked = marked}; new Marked4J(marked);",
+                    .eval(js + ";" +
+                            "Marked4J = function(marked){this.marked = marked};" +
+                            "Marked4J.prototype.setOptions = function(options) {" +
+                            "   this.marked.setOptions(options);" +
+                            "};" +
+                            "new Marked4J(marked);",
                             bindings);
         } catch (IOException e) {
             throw new IllegalStateException("marked.js is not found.", e);

@@ -27,7 +27,7 @@ public class MarkedTest {
                 "<li>bar</li>\n" +
                 "<li>baz</li>\n" +
                 "</ul>\n";
-        Marked marked = new MarkedBuilder().gfm(true).build();
+        Marked marked = new Marked();
         assertThat(marked.marked(md), is(expected));
     }
 
@@ -58,7 +58,7 @@ public class MarkedTest {
     }
 
     @Test
-    public void testTable() {
+    public void testEnableTable() {
         String md = "Colons can be used to align columns.\n" +
                 "\n" +
                 "| Tables        | Are           | Cool  |\n" +
@@ -123,8 +123,99 @@ public class MarkedTest {
                 "</tbody>\n" +
                 "</table>\n";
 
-        Marked marked = new MarkedBuilder().gfm(true).tables(true).build();
+        Marked marked = new MarkedBuilder().tables(true).build();
         assertThat(marked.marked(md), is(expected));
     }
 
+    @Test
+    public void testDisableTable() {
+        String md = "Colons can be used to align columns.\n" +
+                "\n" +
+                "| Tables        | Are           | Cool  |\n" +
+                "| ------------- |:-------------:| -----:|\n" +
+                "| col 3 is      | right-aligned | $1600 |\n" +
+                "| col 2 is      | centered      |   $12 |\n" +
+                "| zebra stripes | are neat      |    $1 |\n" +
+                "\n" +
+                "The outer pipes (|) are optional, and you don't need to make the raw Markdown line up prettily. You can also use inline Markdown.\n" +
+                "\n" +
+                "Markdown | Less | Pretty\n" +
+                "--- | --- | ---\n" +
+                "*Still* | `renders` | **nicely**\n" +
+                "1 | 2 | 3";
+        String expected = "<p>Colons can be used to align columns.</p>\n" +
+                "<p>| Tables        | Are           | Cool  |\n" +
+                "| ------------- |:-------------:| -----:|\n" +
+                "| col 3 is      | right-aligned | $1600 |\n" +
+                "| col 2 is      | centered      |   $12 |\n" +
+                "| zebra stripes | are neat      |    $1 |</p>\n" +
+                "<p>The outer pipes (|) are optional, and you don&#39;t need to make the raw Markdown line up prettily. You can also use inline Markdown.</p>\n" +
+                "<p>Markdown | Less | Pretty\n" +
+                "--- | --- | ---\n" +
+                "<em>Still</em> | <code>renders</code> | <strong>nicely</strong>\n" +
+                "1 | 2 | 3</p>\n";
+
+        Marked marked = new MarkedBuilder().tables(false).build();
+        assertThat(marked.marked(md), is(expected));
+    }
+
+    @Test
+    public void testEnableSanitize() {
+        String md = "<ul>\n" +
+                "<li>foo</li>\n" +
+                "<li>bar</li>\n" +
+                "<li>baz</li>\n" +
+                "</ul>\n";
+        String expected = "<p>&lt;ul&gt;\n" +
+                "&lt;li&gt;foo&lt;/li&gt;\n" +
+                "&lt;li&gt;bar&lt;/li&gt;\n" +
+                "&lt;li&gt;baz&lt;/li&gt;\n" +
+                "&lt;/ul&gt;\n" +
+                "</p>\n";
+        Marked marked = new MarkedBuilder().sanitize(true).build();
+        //System.out.println(marked.marked(md));
+        assertThat(marked.marked(md), is(expected));
+    }
+
+    @Test
+    public void testDisableSanitize() {
+        String md = "<ul>\n" +
+                "<li>foo</li>\n" +
+                "<li>bar</li>\n" +
+                "<li>baz</li>\n" +
+                "</ul>\n";
+        String expected = "<ul>\n" +
+                "<li>foo</li>\n" +
+                "<li>bar</li>\n" +
+                "<li>baz</li>\n" +
+                "</ul>\n";
+        Marked marked = new MarkedBuilder().sanitize(false).build();
+        assertThat(marked.marked(md), is(expected));
+    }
+
+    @Test
+    public void testEnableBreaks() {
+        String md = "The point of marked was to create a markdown compiler where it was possible to frequently parse huge chunks of markdown without having to worry about caching the compiled output somehow...or blocking for an unnecesarily long time.\n" +
+                "marked is very concise and still implements all markdown features. It is also now fully compatible with the client-side.\n" +
+                "marked more or less passes the official markdown test suite in its entirety. This is important because a surprising number of markdown compilers cannot pass more than a few tests. It was very difficult to get marked as compliant as it is. It could have cut corners in several areas for the sake of performance, but did not in order to be exactly what you expect in terms of a markdown rendering. In fact, this is why marked could be considered at a disadvantage in the benchmarks above.\n" +
+                "Along with implementing every markdown feature, marked also implements GFM features.";
+        String expected = "<p>The point of marked was to create a markdown compiler where it was possible to frequently parse huge chunks of markdown without having to worry about caching the compiled output somehow...or blocking for an unnecesarily long time.<br>marked is very concise and still implements all markdown features. It is also now fully compatible with the client-side.<br>marked more or less passes the official markdown test suite in its entirety. This is important because a surprising number of markdown compilers cannot pass more than a few tests. It was very difficult to get marked as compliant as it is. It could have cut corners in several areas for the sake of performance, but did not in order to be exactly what you expect in terms of a markdown rendering. In fact, this is why marked could be considered at a disadvantage in the benchmarks above.<br>Along with implementing every markdown feature, marked also implements GFM features.</p>\n";
+        Marked marked = new MarkedBuilder().breaks(true).build();
+        assertThat(marked.marked(md), is(expected));
+    }
+
+    @Test
+    public void testDisableBreaks() {
+        String md = "The point of marked was to create a markdown compiler where it was possible to frequently parse huge chunks of markdown without having to worry about caching the compiled output somehow...or blocking for an unnecesarily long time.\n" +
+                "marked is very concise and still implements all markdown features. It is also now fully compatible with the client-side.\n" +
+                "marked more or less passes the official markdown test suite in its entirety. This is important because a surprising number of markdown compilers cannot pass more than a few tests. It was very difficult to get marked as compliant as it is. It could have cut corners in several areas for the sake of performance, but did not in order to be exactly what you expect in terms of a markdown rendering. In fact, this is why marked could be considered at a disadvantage in the benchmarks above.\n" +
+                "Along with implementing every markdown feature, marked also implements GFM features.";
+        String expected = "<p>The point of marked was to create a markdown compiler where it was possible to frequently parse huge chunks of markdown without having to worry about caching the compiled output somehow...or blocking for an unnecesarily long time.\n" +
+                "marked is very concise and still implements all markdown features. It is also now fully compatible with the client-side.\n" +
+                "marked more or less passes the official markdown test suite in its entirety. This is important because a surprising number of markdown compilers cannot pass more than a few tests. It was very difficult to get marked as compliant as it is. It could have cut corners in several areas for the sake of performance, but did not in order to be exactly what you expect in terms of a markdown rendering. In fact, this is why marked could be considered at a disadvantage in the benchmarks above.\n" +
+                "Along with implementing every markdown feature, marked also implements GFM features.</p>\n";
+        Marked marked = new MarkedBuilder().breaks(false).build();
+        System.out.println(marked.marked(md));
+        assertThat(marked.marked(md), is(expected));
+    }
 }
