@@ -23,17 +23,8 @@ public class Marked {
         this();
         ScriptEngine engine = (ScriptEngine) invocableEngine;
         try {
-            Object options = engine.eval(String.format("(function(){" +
-                    "return {\n" +
-                    "  gfm: %s,\n" +
-                    "  tables: %s,\n" +
-                    "  breaks: %s,\n" +
-                    "  pedantic: %s,\n" +
-                    "  sanitize: %s,\n" +
-                    "  smartLists: %s,\n" +
-                    "  smartypants: %s\n" +
-                    "}})();",
-                    gfm, tables, breaks, pedantic, sanitize, smartLists, smartypants));
+            String options = String.format("{\"gfm\": %s,\"tables\": %s,\"breaks\": %s,\"pedantic\": %s,\"sanitize\": %s,\"smartLists\": %s,\"smartypants\": %s}",
+                    gfm, tables, breaks, pedantic, sanitize, smartLists, smartypants);
             invocableEngine.invokeMethod(marked4j, "setOptions", options);
         } catch (ScriptException | NoSuchMethodException e) {
             throw new IllegalStateException("invalid script!", e);
@@ -53,7 +44,8 @@ public class Marked {
                     .eval(js + ";" +
                             "Marked4J = function(marked){this.marked = marked};" +
                             "Marked4J.prototype.setOptions = function(options) {" +
-                            "   this.marked.setOptions(options);" +
+                            "   var opts = JSON.parse(options);" +
+                            "   this.marked.setOptions(opts);" +
                             "};" +
                             "new Marked4J(marked);",
                             bindings);
