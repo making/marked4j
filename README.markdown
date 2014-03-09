@@ -11,7 +11,7 @@
 
 ## Use with Maven
 
-you will get this artifact from Maven Central Repository in future :)
+you will get this artifact from Maven Central Repository
 
     <dependencies>
       <dependency>
