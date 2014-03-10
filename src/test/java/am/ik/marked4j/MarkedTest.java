@@ -65,11 +65,11 @@ public class MarkedTest {
                 " But let's throw in a <b>tag</b>.\n" +
                 " ```";
         String expected = "<pre><code class=\"lang-javascript\"> var s = &quot;JavaScript syntax highlighting&quot;;\n" +
-                " alert(s);</code></pre>\n" +
+                " alert(s);\n</code></pre>\n" +
                 "<pre><code class=\"lang-python\"> s = &quot;Python syntax highlighting&quot;\n" +
-                " print s</code></pre>\n" +
+                " print s\n</code></pre>\n" +
                 "<pre><code> No language indicated, so no syntax highlighting. \n" +
-                " But let&#39;s throw in a &lt;b&gt;tag&lt;/b&gt;.</code></pre>\n";
+                " But let&#39;s throw in a &lt;b&gt;tag&lt;/b&gt;.\n</code></pre>";
         Marked marked = new MarkedBuilder().gfm(true).build();
         assertThat(marked.marked(md), is(expected));
     }
