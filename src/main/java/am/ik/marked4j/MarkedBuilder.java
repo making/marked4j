@@ -48,6 +48,10 @@ public class MarkedBuilder {
      * Use "smart" typograhic punctuation for things like quotes and dashes.
      */
     private boolean smartypants = false;
+    /**
+     * Set the prefix for code block classes. Default: lang-
+     */
+    private String langPrefix = "\"lang-\"";
 
     /**
      * Constructor.
@@ -90,6 +94,11 @@ public class MarkedBuilder {
         return this;
     }
 
+    public MarkedBuilder langPrefix(String langPrefix) {
+        this.langPrefix = "\"" + langPrefix + "\"";
+        return this;
+    }
+
     public Marked build() {
         if (tables && !gfm) {
             throw new IllegalStateException("'tables' option requires the 'gfm' option to be true.");
@@ -98,7 +107,7 @@ public class MarkedBuilder {
             throw new IllegalStateException("'breaks' option requires the 'gfm' option to be true.");
         }
         return new Marked(gfm, tables, breaks, pedantic, sanitize, smartLists,
-                smartypants);
+                smartypants, langPrefix);
     }
 
 }
