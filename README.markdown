@@ -1,5 +1,7 @@
 # Marked4J
 
+[![Build Status](https://travis-ci.org/making/marked4j.svg?branch=master)](https://travis-ci.org/making/marked4j)
+
 [marked](https://github.com/chjj/marked) for Java
 
 ## Usage
