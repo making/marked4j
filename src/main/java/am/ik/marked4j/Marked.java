@@ -35,12 +35,12 @@ public class Marked {
 
     public Marked(boolean gfm, boolean tables, boolean breaks,
                   boolean pedantic, boolean sanitize, boolean smartLists,
-                  boolean smartypants) {
+                  boolean smartypants, String langPrefix) {
         this();
         ScriptEngine engine = (ScriptEngine) invocableEngine;
         try {
-            String options = String.format("{\"gfm\": %s,\"tables\": %s,\"breaks\": %s,\"pedantic\": %s,\"sanitize\": %s,\"smartLists\": %s,\"smartypants\": %s}",
-                    gfm, tables, breaks, pedantic, sanitize, smartLists, smartypants);
+            String options = String.format("{\"gfm\": %s,\"tables\": %s,\"breaks\": %s,\"pedantic\": %s,\"sanitize\": %s,\"smartLists\": %s,\"smartypants\": %s,\"langPrefix\": \"%s\"}",
+                    gfm, tables, breaks, pedantic, sanitize, smartLists, smartypants, langPrefix);
             invocableEngine.invokeMethod(marked4j, "setOptions", options);
         } catch (ScriptException | NoSuchMethodException e) {
             throw new IllegalStateException("invalid script!", e);
