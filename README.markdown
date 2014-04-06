@@ -19,13 +19,21 @@ you will get this artifact from Maven Central Repository
       <dependency>
         <groupId>am.ik.marked4j</groupId>
         <artifactId>marked4j</artifactId>
-        <version>0.9.0</version>
+        <version>0.9.1</version>
       </dependency>
     </dependencies>
 
+## Change Log
+
+* 0.9.1 (2014-04-06)
+  * updated marked version to 0.3.1
+  * supported `langPrefix` option
+* 0.9.0
+  * first release
+
 ## Prerequisites
 
-* JDK7+
+* JDK 7 (using Rhino) or JDK 8 (using Nashorn) 
 
 ## License
 
