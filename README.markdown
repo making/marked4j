@@ -28,7 +28,7 @@ you will get this artifact from Maven Central Repository
 * 0.9.1 (2014-04-06)
   * updated marked version to 0.3.1
   * supported `langPrefix` option
-* 0.9.0
+* 0.9.0 (2014-03-09)
   * first release
 
 ## Prerequisites
