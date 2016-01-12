@@ -1,5 +1,20 @@
 language: java
-jdk:
-  - oraclejdk8
-  - oraclejdk7
-  - openjdk7
+jdk: openjdk7
+branches: 
+only:
+- master
+cache:
+  directories:
+  - "$HOME/.m2"
+after_success:
+- openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/pubring.gpg.enc -out $GPG_DIR/pubring.gpg -d
+- openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/secring.gpg.enc -out $GPG_DIR/secring.gpg -d
+- "$GPG_DIR/publish.sh"
+env:
+  global:
+  - GPG_DIR="`pwd`/deploy"
+  - secure: VlUz9CYOmhWcM6LQWocrSoMWeOJE/2MluMK4GwHgUkeDis1BYWVu5TpsOx20d/BwLNcpy1nBf4A7vA+qg+7WlYR8NrArSYvU0WPPzNeCZi8zbcb/SCUqJeXcYbByIJNwl9CX7Ih1+G2PApCHG6HDC4sPfdwk0FGTsWa/pUMOQBI=
+  - secure: NJ/EzlsSFp/ocZMlDJCA3h0ki42z8KkL5JmVgJwMxWoXOLXPVEkYGbxQo98GTtloyFIRi1uYzkqtMiP5OTrstT8CG2YsSIhya1Sud9YnZH2Z7B/Da3rfj8sb+Rq+1yEexH9J3UJxfOef/ydrD5jLZMlB+P+EObkWbdplc8E/UdY=
+  - secure: XZl7k2vLIGahkaVYaD3ke72bW7rYQi55gnhKlEsQSllCLDKCW+bsmH+/VRoTbdd4+j8ydqR6NFaeMqEWD7bgGSHyPJwB32JzgY3GvYzZUAd8c2HRA0E0wqVxhO3+C41l58ZT+FalKynGQfVzfrtmqj1YYGU3sP074eLeQmJ/xrw=
+  - secure: PVzz9SFohhPX8Ybj7Gr1QopsxBNtV+AY9xO37ocNhI+cvj+e/vm8ZlEV8yOH3gtqVvoYlag5ru+lRZXu/GyDfJZU3jLL7SLN7O5BsQikPu/l7CF+V7si5ytSp7fAbjenmYTZx5Uq22+Tno04eFUu4Cb0yPCpCmCYsKZpHGQOw4o=
+  - secure: D2j/yjl6asUC73AOxbulbWaSvMWrNPdSlmQ20P+fqaPnCHPtHwVoeaqtxKR90xrpwfewD4cbq3Ozz2IZl43MDIVVW/NLzYH6w1T4/boCnKgzTjwtXSwriBslCHrU7WSJFKcqpCUj4yC2NtqmSfCTTzVEOW/RT/6Wckn2mBUqDBA=
