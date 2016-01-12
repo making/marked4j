@@ -19,7 +19,7 @@ you will get this artifact from Maven Central Repository
       <dependency>
         <groupId>am.ik.marked4j</groupId>
         <artifactId>marked4j</artifactId>
-        <version>0.9.1</version>
+        <version>0.9.2</version>
       </dependency>
     </dependencies>
 
