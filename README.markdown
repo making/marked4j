@@ -25,6 +25,8 @@ you will get this artifact from Maven Central Repository
 
 ## Change Log
 
+* 0.9.2 (2016-01-13)
+  * updated marked version to 0.3.5. ([gh-11](https://github.com/making/marked4j/issues/11))
 * 0.9.1 (2014-04-06)
   * updated marked version to 0.3.1
   * supported `langPrefix` option
