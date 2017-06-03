@@ -6,22 +6,26 @@
 
 ## Usage
 
-    String md = "- foo\n- bar\n- baz";
-    Marked marked = new MarkedBuilder().gfm(true).build();
-    String expected = "<ul>\n<li>foo</li>\n<li>bar</li>\n<li>baz</li>\n</ul>\n";
-    assertThat(marked.marked(md), is(expected));
+``` java
+String md = "- foo\n- bar\n- baz";
+Marked marked = new MarkedBuilder().gfm(true).build();
+String expected = "<ul>\n<li>foo</li>\n<li>bar</li>\n<li>baz</li>\n</ul>\n";
+assertThat(marked.marked(md), is(expected));
+```
 
 ## Use with Maven
 
 you will get this artifact from Maven Central Repository
 
-    <dependencies>
-      <dependency>
-        <groupId>am.ik.marked4j</groupId>
-        <artifactId>marked4j</artifactId>
-        <version>0.9.2</version>
-      </dependency>
-    </dependencies>
+``` xml
+<dependencies>
+  <dependency>
+    <groupId>am.ik.marked4j</groupId>
+    <artifactId>marked4j</artifactId>
+    <version>0.9.2</version>
+  </dependency>
+</dependencies>
+```
 
 ## Change Log
 
