@@ -88,6 +88,65 @@ public class MarkedTest {
 	}
 
 	@Test
+	public void autoToc() {
+		String md = "# Test\n" + "\n" + "> This is a test!\n" + "\n" + "<!-- toc -->\n"
+				+ "\n" + "## Quickstart\n" + "This is the quickstart section.\n" + "\n"
+				+ "## Options\n" + "This is the options section.\n" + "\n"
+				+ "## Usage examples\n" + "This is the usage examples section.\n" + "\n"
+				+ "## Contributing\n" + "This is the Contributing section.\n" + "\n"
+				+ "## Author\n" + "This is the Author section.";
+		String expected = "<h1 id=\"test\">Test</h1>\n" + "<blockquote>\n"
+				+ "<p>This is a test!</p>\n" + "</blockquote>\n" + "<!-- toc -->\n"
+				+ "<ul>\n" + "<li><a href=\"#quickstart\">Quickstart</a></li>\n"
+				+ "<li><a href=\"#options\">Options</a></li>\n"
+				+ "<li><a href=\"#usage-examples\">Usage examples</a></li>\n"
+				+ "<li><a href=\"#contributing\">Contributing</a></li>\n"
+				+ "<li><a href=\"#author\">Author</a></li>\n" + "</ul>\n"
+				+ "<!-- tocstop -->\n" + "<h2 id=\"quickstart\">Quickstart</h2>\n"
+				+ "<p>This is the quickstart section.</p>\n"
+				+ "<h2 id=\"options\">Options</h2>\n"
+				+ "<p>This is the options section.</p>\n"
+				+ "<h2 id=\"usage-examples\">Usage examples</h2>\n"
+				+ "<p>This is the usage examples section.</p>\n"
+				+ "<h2 id=\"contributing\">Contributing</h2>\n"
+				+ "<p>This is the Contributing section.</p>\n"
+				+ "<h2 id=\"author\">Author</h2>\n"
+				+ "<p>This is the Author section.</p>\n";
+		Marked marked = new MarkedBuilder().autoToc(true).build();
+		assertThat(marked.marked(md), is(expected));
+	}
+
+	@Test
+	public void autoTocUriEncoding() {
+		String md = "# Test\n" + "\n" + "> This is a test!\n" + "\n" + "<!-- toc -->\n"
+				+ "\n" + "## Quickstart\n" + "This is the quickstart section.\n" + "\n"
+				+ "## Options\n" + "This is the options section.\n" + "\n"
+				+ "## Usage examples\n" + "This is the usage examples section.\n" + "\n"
+				+ "## Contributing\n" + "This is the Contributing section.\n" + "\n"
+				+ "## Author\n" + "This is the Author section.";
+		String expected = "<h1 id=\"Test\">Test</h1>\n" + "<blockquote>\n"
+				+ "<p>This is a test!</p>\n" + "</blockquote>\n" + "<!-- toc -->\n"
+				+ "<ul>\n" + "<li><a href=\"#Quickstart\">Quickstart</a></li>\n"
+				+ "<li><a href=\"#Options\">Options</a></li>\n"
+				+ "<li><a href=\"#Usage%20examples\">Usage examples</a></li>\n"
+				+ "<li><a href=\"#Contributing\">Contributing</a></li>\n"
+				+ "<li><a href=\"#Author\">Author</a></li>\n" + "</ul>\n"
+				+ "<!-- tocstop -->\n" + "<h2 id=\"Quickstart\">Quickstart</h2>\n"
+				+ "<p>This is the quickstart section.</p>\n"
+				+ "<h2 id=\"Options\">Options</h2>\n"
+				+ "<p>This is the options section.</p>\n"
+				+ "<h2 id=\"Usage%20examples\">Usage examples</h2>\n"
+				+ "<p>This is the usage examples section.</p>\n"
+				+ "<h2 id=\"Contributing\">Contributing</h2>\n"
+				+ "<p>This is the Contributing section.</p>\n"
+				+ "<h2 id=\"Author\">Author</h2>\n"
+				+ "<p>This is the Author section.</p>\n";
+		Marked marked = new MarkedBuilder().autoToc(true).enableHeadingIdUriEncoding(true)
+				.build();
+		assertThat(marked.marked(md), is(expected));
+	}
+
+	@Test
 	public void testHighlight() {
 		String md = " ```javascript\n" + " var s = \"JavaScript syntax highlighting\";\n"
 				+ " alert(s);\n" + " ```\n" + " \n" + " ```python\n"

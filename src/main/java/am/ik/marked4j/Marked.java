@@ -27,11 +27,12 @@ import javax.script.*;
 public class Marked {
 	private final Invocable invocableEngine;
 	private final Object marked4j;
+	private final boolean autoToc;
 
 	public Marked(boolean gfm, boolean tables, boolean breaks, boolean pedantic,
 			boolean sanitize, boolean smartLists, boolean smartypants, String langPrefix,
-			boolean enableHeadingIdUriEncoding) {
-		this();
+			boolean enableHeadingIdUriEncoding, boolean autoToc) {
+		this(autoToc);
 		ScriptEngine engine = (ScriptEngine) invocableEngine;
 		try {
 			String options = String.format(
@@ -48,7 +49,8 @@ public class Marked {
 		}
 	}
 
-	public Marked() {
+	public Marked(boolean autoToc) {
+		this.autoToc = autoToc;
 		ScriptEngineManager factory = new ScriptEngineManager();
 		ScriptEngine engine = factory.getEngineByName("JavaScript");
 		this.invocableEngine = (Invocable) engine;
@@ -69,6 +71,10 @@ public class Marked {
 		}
 	}
 
+	public Marked() {
+		this(false);
+	}
+
 	private String invoke(String function, String markdownText) {
 		try {
 			Object result = this.invocableEngine.invokeMethod(marked4j, function,
@@ -82,6 +88,9 @@ public class Marked {
 	}
 
 	public String marked(String markdownText) {
+		if (autoToc && markdownText.contains("<!-- toc -->")) {
+			markdownText = this.insertToc(markdownText);
+		}
 		return this.invoke("marked", markdownText);
 	}
 

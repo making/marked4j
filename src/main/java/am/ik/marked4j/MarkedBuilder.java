@@ -55,6 +55,8 @@ public class MarkedBuilder {
 
 	private boolean enableHeadingIdUriEncoding = false;
 
+	private boolean autoToc = false;
+
 	/**
 	 * Constructor.
 	 */
@@ -106,6 +108,11 @@ public class MarkedBuilder {
 		return this;
 	}
 
+	public MarkedBuilder autoToc(boolean autoToc) {
+		this.autoToc = autoToc;
+		return this;
+	}
+
 	public Marked build() {
 		if (tables && !gfm) {
 			throw new IllegalStateException(
@@ -116,7 +123,7 @@ public class MarkedBuilder {
 					"'breaks' option requires the 'gfm' option to be true.");
 		}
 		return new Marked(gfm, tables, breaks, pedantic, sanitize, smartLists,
-				smartypants, langPrefix, enableHeadingIdUriEncoding);
+				smartypants, langPrefix, enableHeadingIdUriEncoding, autoToc);
 	}
 
 }
