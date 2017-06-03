@@ -22,13 +22,15 @@ you will get this artifact from Maven Central Repository
   <dependency>
     <groupId>am.ik.marked4j</groupId>
     <artifactId>marked4j</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
   </dependency>
 </dependencies>
 ```
 
 ## Change Log
 
+* 0.10.1 (2017-06-04)
+  * supported `autoToc`
 * 0.10.0 (2017-06-04)
   * supported TOC 👏 ([gh-2](https://github.com/making/marked4j/issues/2))
   * updated marked version to 0.3.6.
