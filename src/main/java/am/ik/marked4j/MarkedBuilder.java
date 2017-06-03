@@ -53,6 +53,8 @@ public class MarkedBuilder {
 	 */
 	private String langPrefix = "lang-";
 
+	private boolean enableHeadingIdUriEncoding = false;
+
 	/**
 	 * Constructor.
 	 */
@@ -99,6 +101,11 @@ public class MarkedBuilder {
 		return this;
 	}
 
+	public MarkedBuilder enableHeadingIdUriEncoding(boolean enableHeadingIdUriEncoding) {
+		this.enableHeadingIdUriEncoding = enableHeadingIdUriEncoding;
+		return this;
+	}
+
 	public Marked build() {
 		if (tables && !gfm) {
 			throw new IllegalStateException(
@@ -109,7 +116,7 @@ public class MarkedBuilder {
 					"'breaks' option requires the 'gfm' option to be true.");
 		}
 		return new Marked(gfm, tables, breaks, pedantic, sanitize, smartLists,
-				smartypants, langPrefix);
+				smartypants, langPrefix, enableHeadingIdUriEncoding);
 	}
 
 }

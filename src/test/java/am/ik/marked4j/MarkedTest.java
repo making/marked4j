@@ -44,6 +44,50 @@ public class MarkedTest {
 	}
 
 	@Test
+	public void insertToc() {
+		String md = "# Test\n" + "\n" + "> This is a test!\n" + "\n" + "<!-- toc -->\n"
+				+ "\n" + "## Quickstart\n" + "This is the quickstart section.\n" + "\n"
+				+ "## Options\n" + "This is the options section.\n" + "\n"
+				+ "## Usage examples\n" + "This is the usage examples section.\n" + "\n"
+				+ "## Contributing\n" + "This is the Contributing section.\n" + "\n"
+				+ "## Author\n" + "This is the Author section.";
+		String expected = "# Test\n" + "\n" + "> This is a test!\n" + "\n" + "\n" + "\n"
+				+ "<!-- toc -->\n" + "\n" + "* [Quickstart](#quickstart)\n"
+				+ "* [Options](#options)\n" + "* [Usage examples](#usage-examples)\n"
+				+ "* [Contributing](#contributing)\n" + "* [Author](#author)\n" + "\n"
+				+ "<!-- tocstop -->\n" + "\n" + "\n" + "## Quickstart\n"
+				+ "This is the quickstart section.\n" + "\n" + "## Options\n"
+				+ "This is the options section.\n" + "\n" + "## Usage examples\n"
+				+ "This is the usage examples section.\n" + "\n" + "## Contributing\n"
+				+ "This is the Contributing section.\n" + "\n" + "## Author\n"
+				+ "This is the Author section.";
+		Marked marked = new MarkedBuilder().build();
+		assertThat(marked.insertToc(md), is(expected));
+	}
+
+	@Test
+	public void insertTocUriEncoding() {
+		String md = "# Test\n" + "\n" + "> This is a test!\n" + "\n" + "<!-- toc -->\n"
+				+ "\n" + "## Quickstart\n" + "This is the quickstart section.\n" + "\n"
+				+ "## Options\n" + "This is the options section.\n" + "\n"
+				+ "## Usage examples\n" + "This is the usage examples section.\n" + "\n"
+				+ "## Contributing\n" + "This is the Contributing section.\n" + "\n"
+				+ "## Author\n" + "This is the Author section.";
+		String expected = "# Test\n" + "\n" + "> This is a test!\n" + "\n" + "\n" + "\n"
+				+ "<!-- toc -->\n" + "\n" + "* [Quickstart](#Quickstart)\n"
+				+ "* [Options](#Options)\n" + "* [Usage examples](#Usage%20examples)\n"
+				+ "* [Contributing](#Contributing)\n" + "* [Author](#Author)\n" + "\n"
+				+ "<!-- tocstop -->\n" + "\n" + "\n" + "## Quickstart\n"
+				+ "This is the quickstart section.\n" + "\n" + "## Options\n"
+				+ "This is the options section.\n" + "\n" + "## Usage examples\n"
+				+ "This is the usage examples section.\n" + "\n" + "## Contributing\n"
+				+ "This is the Contributing section.\n" + "\n" + "## Author\n"
+				+ "This is the Author section.";
+		Marked marked = new MarkedBuilder().enableHeadingIdUriEncoding(true).build();
+		assertThat(marked.insertToc(md), is(expected));
+	}
+
+	@Test
 	public void testHighlight() {
 		String md = " ```javascript\n" + " var s = \"JavaScript syntax highlighting\";\n"
 				+ " alert(s);\n" + " ```\n" + " \n" + " ```python\n"

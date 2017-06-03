@@ -29,8 +29,8 @@ public class Marked {
 	private final Object marked4j;
 
 	public Marked(boolean gfm, boolean tables, boolean breaks, boolean pedantic,
-			boolean sanitize, boolean smartLists, boolean smartypants,
-			String langPrefix) {
+			boolean sanitize, boolean smartLists, boolean smartypants, String langPrefix,
+			boolean enableHeadingIdUriEncoding) {
 		this();
 		ScriptEngine engine = (ScriptEngine) invocableEngine;
 		try {
@@ -39,6 +39,9 @@ public class Marked {
 					gfm, tables, breaks, pedantic, sanitize, smartLists, smartypants,
 					langPrefix);
 			invocableEngine.invokeMethod(marked4j, "setOptions", options);
+			if (enableHeadingIdUriEncoding) {
+				invocableEngine.invokeMethod(marked4j, "enableHeadingIdUriEncoding");
+			}
 		}
 		catch (ScriptException | NoSuchMethodException e) {
 			throw new IllegalStateException("invalid script!", e);
@@ -49,16 +52,14 @@ public class Marked {
 		ScriptEngineManager factory = new ScriptEngineManager();
 		ScriptEngine engine = factory.getEngineByName("JavaScript");
 		this.invocableEngine = (Invocable) engine;
-		try (InputStream strm = Marked.class.getClassLoader()
-				.getResourceAsStream("META-INF/resources/assets/marked/lib/marked.js")) {
-			String js = copyToString(strm, StandardCharsets.UTF_8);
+		try (InputStream marked = Marked.class.getClassLoader()
+				.getResourceAsStream("META-INF/resources/assets/marked/lib/marked.js");
+				InputStream lib = Marked.class.getClassLoader()
+						.getResourceAsStream("lib.js")) {
+			String js = copyToString(marked, StandardCharsets.UTF_8);
 			Bindings bindings = new SimpleBindings(); // todo
-			this.marked4j = engine.eval(js + ";"
-					+ "Marked4J = function(marked){this.marked = marked};"
-					+ "Marked4J.prototype.setOptions = function(options) {"
-					+ "   var opts = JSON.parse(options);"
-					+ "   this.marked.setOptions(opts);" + "};" + "new Marked4J(marked);",
-					bindings);
+			String script = copyToString(lib, StandardCharsets.UTF_8);
+			this.marked4j = engine.eval(js + ";" + script, bindings);
 		}
 		catch (IOException e) {
 			throw new IllegalStateException("marked.js is not found.", e);
@@ -68,9 +69,9 @@ public class Marked {
 		}
 	}
 
-	public String marked(String markdownText) {
+	private String invoke(String function, String markdownText) {
 		try {
-			Object result = this.invocableEngine.invokeMethod(marked4j, "marked",
+			Object result = this.invocableEngine.invokeMethod(marked4j, function,
 					markdownText);
 			return result == null ? null : result.toString();
 		}
@@ -78,6 +79,18 @@ public class Marked {
 			throw new IllegalArgumentException("Cannot parse the given markdown text!",
 					e);
 		}
+	}
+
+	public String marked(String markdownText) {
+		return this.invoke("marked", markdownText);
+	}
+
+	public String toc(String markdownText) {
+		return this.invoke("toc", markdownText);
+	}
+
+	public String insertToc(String markdownText) {
+		return this.invoke("insertToc", markdownText);
 	}
 
 	private static String copyToString(InputStream in, Charset charset)
