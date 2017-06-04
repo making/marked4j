@@ -22,13 +22,15 @@ you will get this artifact from Maven Central Repository
   <dependency>
     <groupId>am.ik.marked4j</groupId>
     <artifactId>marked4j</artifactId>
-    <version>0.10.1</version>
+    <version>0.10.2</version>
   </dependency>
 </dependencies>
 ```
 
 ## Change Log
 
+* 0.10.2 (2017-06-04)
+  * fix nested list in TOC
 * 0.10.1 (2017-06-04)
   * supported `autoToc`
 * 0.10.0 (2017-06-04)
