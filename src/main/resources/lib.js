@@ -41,9 +41,9 @@
         }, 9999);
 
         return tokens.map(function (token) {
-                var id = this.slugify(token.text);
-                return repeat('*', 1 + token.depth - min) + ' [' + token.text + '](#' + id + ')';
-            }.bind(this)).join('\n') + '\n';
+            var id = this.slugify(token.text);
+            return repeat('  ', token.depth - min) + '* [' + token.text + '](#' + id + ')';
+        }.bind(this)).join('\n') + '\n';
     };
     // Thanks to https://github.com/jonschlinkert/marked-toc
     Marked4J.prototype.insertToc = function (text) {

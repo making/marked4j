@@ -147,6 +147,25 @@ public class MarkedTest {
 	}
 
 	@Test
+	public void nestedToc() {
+		String md = "<!-- toc -->\n" + "## a\n" + "## b\n" + "### c\n" + "### d\n"
+				+ "## e\n" + "## f\n" + "### g\n" + "### h\n" + "## i";
+		String expected = "<!-- toc -->\n" + "<ul>\n" + "<li><a href=\"#a\">a</a></li>\n"
+				+ "<li><a href=\"#b\">b</a><ul>\n" + "<li><a href=\"#c\">c</a></li>\n"
+				+ "<li><a href=\"#d\">d</a></li>\n" + "</ul>\n" + "</li>\n"
+				+ "<li><a href=\"#e\">e</a></li>\n" + "<li><a href=\"#f\">f</a><ul>\n"
+				+ "<li><a href=\"#g\">g</a></li>\n" + "<li><a href=\"#h\">h</a></li>\n"
+				+ "</ul>\n" + "</li>\n" + "<li><a href=\"#i\">i</a></li>\n" + "</ul>\n"
+				+ "<!-- tocstop -->\n" + "<h2 id=\"a\">a</h2>\n" + "<h2 id=\"b\">b</h2>\n"
+				+ "<h3 id=\"c\">c</h3>\n" + "<h3 id=\"d\">d</h3>\n"
+				+ "<h2 id=\"e\">e</h2>\n" + "<h2 id=\"f\">f</h2>\n"
+				+ "<h3 id=\"g\">g</h3>\n" + "<h3 id=\"h\">h</h3>\n"
+				+ "<h2 id=\"i\">i</h2>\n";
+		Marked marked = new MarkedBuilder().autoToc(true).build();
+		assertThat(marked.marked(md), is(expected));
+	}
+
+	@Test
 	public void testHighlight() {
 		String md = " ```javascript\n" + " var s = \"JavaScript syntax highlighting\";\n"
 				+ " alert(s);\n" + " ```\n" + " \n" + " ```python\n"
