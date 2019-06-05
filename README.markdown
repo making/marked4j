@@ -22,13 +22,15 @@ you will get this artifact from Maven Central Repository
   <dependency>
     <groupId>am.ik.marked4j</groupId>
     <artifactId>marked4j</artifactId>
-    <version>0.10.3</version>
+    <version>0.11.0</version>
   </dependency>
 </dependencies>
 ```
 
 ## Change Log
 
+* 0.11.0 (2019-06-06)
+  * Use j2v8 instead of Nashorn
 * 0.10.3 (2018-03-08)
   * updated marked version to 0.3.17.
 * 0.10.2 (2017-06-04)
@@ -48,7 +50,7 @@ you will get this artifact from Maven Central Repository
 
 ## Prerequisites
 
-* JDK 7 (using Rhino) or JDK 8 (using Nashorn) 
+* JDK 8+
 
 ## License
 

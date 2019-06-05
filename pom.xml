@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>am.ik.marked4j</groupId>
     <artifactId>marked4j</artifactId>
-    <version>0.11.0-SNAPSHOT</version>
+    <version>0.11.0</version>
     <name>Marked4J</name>
 
     <licenses>
