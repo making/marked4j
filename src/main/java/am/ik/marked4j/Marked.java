@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2017 Toshiaki Maki <makingx@gmail.com>
+ * Copyright (C) 2014-2019 Toshiaki Maki <makingx@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,103 +16,110 @@
 
 package am.ik.marked4j;
 
+import com.eclipsesource.v8.V8;
+import com.eclipsesource.v8.V8Array;
+import com.eclipsesource.v8.V8Object;
+
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import javax.script.*;
+public class Marked implements Closeable {
 
-public class Marked {
-	private final Invocable invocableEngine;
-	private final Object marked4j;
-	private final boolean autoToc;
+    private final boolean autoToc;
 
-	public Marked(boolean gfm, boolean tables, boolean breaks, boolean pedantic,
-			boolean sanitize, boolean smartLists, boolean smartypants, String langPrefix,
-			boolean enableHeadingIdUriEncoding, boolean autoToc) {
-		this(autoToc);
-		ScriptEngine engine = (ScriptEngine) invocableEngine;
-		try {
-			String options = String.format(
-					"{\"gfm\": %s,\"tables\": %s,\"breaks\": %s,\"pedantic\": %s,\"sanitize\": %s,\"smartLists\": %s,\"smartypants\": %s,\"langPrefix\": \"%s\"}",
-					gfm, tables, breaks, pedantic, sanitize, smartLists, smartypants,
-					langPrefix);
-			invocableEngine.invokeMethod(marked4j, "setOptions", options);
-			if (enableHeadingIdUriEncoding) {
-				invocableEngine.invokeMethod(marked4j, "enableHeadingIdUriEncoding");
-			}
-		}
-		catch (ScriptException | NoSuchMethodException e) {
-			throw new IllegalStateException("invalid script!", e);
-		}
-	}
+    private final V8 v8;
 
-	public Marked(boolean autoToc) {
-		this.autoToc = autoToc;
-		ScriptEngineManager factory = new ScriptEngineManager();
-		ScriptEngine engine = factory.getEngineByName("JavaScript");
-		this.invocableEngine = (Invocable) engine;
-		try (InputStream marked = Marked.class.getClassLoader()
-				.getResourceAsStream("META-INF/resources/assets/marked/lib/marked.js");
-				InputStream lib = Marked.class.getClassLoader()
-						.getResourceAsStream("lib.js")) {
-			String js = copyToString(marked, StandardCharsets.UTF_8);
-			Bindings bindings = new SimpleBindings(); // todo
-			String script = copyToString(lib, StandardCharsets.UTF_8);
-			this.marked4j = engine.eval(js + ";" + script, bindings);
-		}
-		catch (IOException e) {
-			throw new IllegalStateException("marked.js is not found.", e);
-		}
-		catch (ScriptException e) {
-			throw new IllegalStateException("invalid script!", e);
-		}
-	}
+    private final V8Object marked;
 
-	public Marked() {
-		this(false);
-	}
+    public Marked(boolean gfm, boolean tables, boolean breaks, boolean pedantic,
+                  boolean sanitize, boolean smartLists, boolean smartypants, String langPrefix,
+                  boolean enableHeadingIdUriEncoding, boolean autoToc) {
+        this(autoToc);
+        try (ReleasableWrapper<V8Array> parameters = new ReleasableWrapper<>(new V8Array(this.v8));
+             ReleasableWrapper<V8Object> options = new ReleasableWrapper<>(new V8Object(this.v8)
+                 .add("gfm", gfm)
+                 .add("tables", tables)
+                 .add("breaks", breaks)
+                 .add("pedantic", pedantic)
+                 .add("sanitize", sanitize)
+                 .add("smartLists", smartLists)
+                 .add("smartypants", smartypants)
+                 .add("langPrefix", langPrefix))
+        ) {
+            parameters.unwrap().push(options.unwrap());
+            this.marked.executeFunction("setOptions", parameters.unwrap());
+        }
+        if (enableHeadingIdUriEncoding) {
+            this.marked.executeFunction("enableHeadingIdUriEncoding", null);
+        }
+    }
 
-	private String invoke(String function, String markdownText) {
-		try {
-			Object result = this.invocableEngine.invokeMethod(marked4j, function,
-					markdownText);
-			return result == null ? null : result.toString();
-		}
-		catch (NoSuchMethodException | ScriptException e) {
-			throw new IllegalArgumentException("Cannot parse the given markdown text!",
-					e);
-		}
-	}
+    public Marked(boolean autoToc) {
+        this.autoToc = autoToc;
+        this.v8 = V8.createV8Runtime();
+        try (InputStream marked = Marked.class.getClassLoader()
+            .getResourceAsStream("META-INF/resources/assets/marked/lib/marked.js");
+             InputStream lib = Marked.class.getClassLoader()
+                 .getResourceAsStream("lib.js")) {
+            String js = copyToString(marked, StandardCharsets.UTF_8);
+            String script = copyToString(lib, StandardCharsets.UTF_8);
+            this.marked = this.v8.executeObjectScript(js + ";" + script);
+        } catch (IOException e) {
+            throw new IllegalStateException("marked.js is not found.", e);
+        }
+    }
 
-	public String marked(String markdownText) {
-		if (autoToc && markdownText.contains("<!-- toc -->")) {
-			markdownText = this.insertToc(markdownText);
-		}
-		return this.invoke("marked", markdownText);
-	}
+    public Marked() {
+        this(false);
+    }
 
-	public String toc(String markdownText) {
-		return this.invoke("toc", markdownText);
-	}
+    @Override
+    public void close() {
+        if (this.marked != null) {
+            this.marked.release();
+        }
+        if (this.v8 != null) {
+            this.v8.release();
+        }
+    }
 
-	public String insertToc(String markdownText) {
-		return this.invoke("insertToc", markdownText);
-	}
+    private String invoke(String function, String markdownText) {
+        try (ReleasableWrapper<V8Array> parameters = new ReleasableWrapper<>(new V8Array(this.v8));
+        ) {
+            parameters.unwrap().push(markdownText);
+            return this.marked.executeStringFunction(function, parameters.unwrap());
+        }
+    }
 
-	private static String copyToString(InputStream in, Charset charset)
-			throws IOException {
-		StringBuilder out = new StringBuilder();
-		try (InputStreamReader reader = new InputStreamReader(in, charset);) {
-			char[] buffer = new char[4096];
-			int bytesRead = -1;
-			while ((bytesRead = reader.read(buffer)) != -1) {
-				out.append(buffer, 0, bytesRead);
-			}
-			return out.toString();
-		}
-	}
+    public String marked(String markdownText) {
+        if (this.autoToc && markdownText.contains("<!-- toc -->")) {
+            markdownText = this.insertToc(markdownText);
+        }
+        return this.invoke("marked", markdownText);
+    }
 
+    public String toc(String markdownText) {
+        return this.invoke("toc", markdownText);
+    }
+
+    public String insertToc(String markdownText) {
+        return this.invoke("insertToc", markdownText);
+    }
+
+    private static String copyToString(InputStream in, Charset charset)
+        throws IOException {
+        StringBuilder out = new StringBuilder();
+        try (InputStreamReader reader = new InputStreamReader(in, charset);) {
+            char[] buffer = new char[4096];
+            int bytesRead = -1;
+            while ((bytesRead = reader.read(buffer)) != -1) {
+                out.append(buffer, 0, bytesRead);
+            }
+            return out.toString();
+        }
+    }
 }

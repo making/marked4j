@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2017 Toshiaki Maki <makingx@gmail.com>
+ * Copyright (C) 2014-2019 Toshiaki Maki <makingx@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class MarkedTest {
@@ -276,7 +275,6 @@ public class MarkedTest {
 	}
 
 	@Test
-	@Ignore("Java8 got <p><ul><li>foo</li><li>bar</li><li>baz</li></ul></p>\n")
 	public void testDisableSanitize() {
 		String md = "<ul>" + "<li>foo</li>" + "<li>bar</li>" + "<li>baz</li>" + "</ul>";
 		String expected = "<ul>" + "<li>foo</li>" + "<li>bar</li>" + "<li>baz</li>"
@@ -289,9 +287,9 @@ public class MarkedTest {
 	public void testEnableBreaks() {
 		String md = "The point of marked was to create a markdown compiler where it was possible to frequently parse huge chunks of markdown without having to worry about caching the compiled output somehow...or blocking for an unnecesarily long time.\n"
 				+ "marked is very concise and still implements all markdown features. It is also now fully compatible with the client-side.\n"
-				+ "marked more or less passes the official markdown test suite in its entirety. This is important because a surprising number of markdown compilers cannot pass more than a few tests. It was very difficult to get marked as compliant as it is. It could have cut corners in several areas for the sake of performance, but did not in order to be exactly what you expect in terms of a markdown rendering. In fact, this is why marked could be considered at a disadvantage in the benchmarks above.\n"
+				+ "marked more or less passes the official markdown test suite in its entirety. This is important because a surprising number of markdown compilers cannot pass more than a few tests. It was very difficult to unwrap marked as compliant as it is. It could have cut corners in several areas for the sake of performance, but did not in order to be exactly what you expect in terms of a markdown rendering. In fact, this is why marked could be considered at a disadvantage in the benchmarks above.\n"
 				+ "Along with implementing every markdown feature, marked also implements GFM features.";
-		String expected = "<p>The point of marked was to create a markdown compiler where it was possible to frequently parse huge chunks of markdown without having to worry about caching the compiled output somehow...or blocking for an unnecesarily long time.<br>marked is very concise and still implements all markdown features. It is also now fully compatible with the client-side.<br>marked more or less passes the official markdown test suite in its entirety. This is important because a surprising number of markdown compilers cannot pass more than a few tests. It was very difficult to get marked as compliant as it is. It could have cut corners in several areas for the sake of performance, but did not in order to be exactly what you expect in terms of a markdown rendering. In fact, this is why marked could be considered at a disadvantage in the benchmarks above.<br>Along with implementing every markdown feature, marked also implements GFM features.</p>\n";
+		String expected = "<p>The point of marked was to create a markdown compiler where it was possible to frequently parse huge chunks of markdown without having to worry about caching the compiled output somehow...or blocking for an unnecesarily long time.<br>marked is very concise and still implements all markdown features. It is also now fully compatible with the client-side.<br>marked more or less passes the official markdown test suite in its entirety. This is important because a surprising number of markdown compilers cannot pass more than a few tests. It was very difficult to unwrap marked as compliant as it is. It could have cut corners in several areas for the sake of performance, but did not in order to be exactly what you expect in terms of a markdown rendering. In fact, this is why marked could be considered at a disadvantage in the benchmarks above.<br>Along with implementing every markdown feature, marked also implements GFM features.</p>\n";
 		Marked marked = new MarkedBuilder().breaks(true).build();
 		assertThat(marked.marked(md), is(expected));
 	}
@@ -300,11 +298,11 @@ public class MarkedTest {
 	public void testDisableBreaks() {
 		String md = "The point of marked was to create a markdown compiler where it was possible to frequently parse huge chunks of markdown without having to worry about caching the compiled output somehow...or blocking for an unnecesarily long time.\n"
 				+ "marked is very concise and still implements all markdown features. It is also now fully compatible with the client-side.\n"
-				+ "marked more or less passes the official markdown test suite in its entirety. This is important because a surprising number of markdown compilers cannot pass more than a few tests. It was very difficult to get marked as compliant as it is. It could have cut corners in several areas for the sake of performance, but did not in order to be exactly what you expect in terms of a markdown rendering. In fact, this is why marked could be considered at a disadvantage in the benchmarks above.\n"
+				+ "marked more or less passes the official markdown test suite in its entirety. This is important because a surprising number of markdown compilers cannot pass more than a few tests. It was very difficult to unwrap marked as compliant as it is. It could have cut corners in several areas for the sake of performance, but did not in order to be exactly what you expect in terms of a markdown rendering. In fact, this is why marked could be considered at a disadvantage in the benchmarks above.\n"
 				+ "Along with implementing every markdown feature, marked also implements GFM features.";
 		String expected = "<p>The point of marked was to create a markdown compiler where it was possible to frequently parse huge chunks of markdown without having to worry about caching the compiled output somehow...or blocking for an unnecesarily long time.\n"
 				+ "marked is very concise and still implements all markdown features. It is also now fully compatible with the client-side.\n"
-				+ "marked more or less passes the official markdown test suite in its entirety. This is important because a surprising number of markdown compilers cannot pass more than a few tests. It was very difficult to get marked as compliant as it is. It could have cut corners in several areas for the sake of performance, but did not in order to be exactly what you expect in terms of a markdown rendering. In fact, this is why marked could be considered at a disadvantage in the benchmarks above.\n"
+				+ "marked more or less passes the official markdown test suite in its entirety. This is important because a surprising number of markdown compilers cannot pass more than a few tests. It was very difficult to unwrap marked as compliant as it is. It could have cut corners in several areas for the sake of performance, but did not in order to be exactly what you expect in terms of a markdown rendering. In fact, this is why marked could be considered at a disadvantage in the benchmarks above.\n"
 				+ "Along with implementing every markdown feature, marked also implements GFM features.</p>\n";
 		Marked marked = new MarkedBuilder().breaks(false).build();
 		// System.out.println(marked.marked(md));

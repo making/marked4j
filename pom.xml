@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>am.ik.marked4j</groupId>
     <artifactId>marked4j</artifactId>
-    <version>0.10.4-SNAPSHOT</version>
+    <version>0.11.0-SNAPSHOT</version>
     <name>Marked4J</name>
 
     <licenses>
@@ -33,6 +33,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <j2v8.version>4.6.0</j2v8.version>
     </properties>
 
     <profiles>
@@ -127,9 +128,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.5</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                    <compilerVersion>1.7</compilerVersion>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <compilerVersion>1.8</compilerVersion>
                     <compilerArguments>
                         <verbose/>
                     </compilerArguments>
@@ -154,6 +155,21 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>com.eclipsesource.j2v8</groupId>
+            <artifactId>j2v8_macosx_x86_64</artifactId>
+            <version>${j2v8.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.eclipsesource.j2v8</groupId>
+            <artifactId>j2v8_linux_x86_64</artifactId>
+            <version>${j2v8.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.eclipsesource.j2v8</groupId>
+            <artifactId>j2v8_win32_x86_64</artifactId>
+            <version>${j2v8.version}</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

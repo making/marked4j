@@ -10,8 +10,7 @@
         return this._marked(text, {renderer: this.renderer});
     };
     Marked4J.prototype.setOptions = function (options) {
-        var opts = JSON.parse(options);
-        this._marked.setOptions(opts);
+        this._marked.setOptions(options);
     };
     Marked4J.prototype.enableHeadingIdUriEncoding = function () {
         this.slugify = function (text) {
