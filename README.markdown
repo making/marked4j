@@ -1,6 +1,9 @@
 # Marked4J
 
 [![Build Status](https://travis-ci.org/making/marked4j.svg?branch=master)](https://travis-ci.org/making/marked4j)
+[![Apache 2.0](https://img.shields.io/github/license/making/marked4j.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/am.ik.marked4j/marked4j/badge.svg)](https://maven-badges.herokuapp.com/maven-central/am.ik.marked4j/marked4j)
+[![Javadocs](https://www.javadoc.io/badge/am.ik.marked4j/marked4j.svg)](https://www.javadoc.io/doc/am.ik.marked4j/marked4j)
 
 [marked](https://github.com/chjj/marked) for Java
 
