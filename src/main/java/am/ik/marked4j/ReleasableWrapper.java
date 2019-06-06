@@ -18,9 +18,7 @@ package am.ik.marked4j;
 
 import com.eclipsesource.v8.Releasable;
 
-import java.io.Closeable;
-
-class ReleasableWrapper<T extends Releasable> implements Closeable {
+class ReleasableWrapper<T extends Releasable> implements AutoCloseable {
 
     private final T target;
 
